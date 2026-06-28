@@ -18,7 +18,8 @@ og-image.png
 
 | Branch | Purpose |
 |---|---|
-| `dev` | active development — all work goes here |
+| `feature/*` | bigger features start here, branched off `dev` — merges into `dev` only once fully stable and done |
+| `dev` | active development — small fixes go here directly, features merge in from `feature/*` |
 | `main` | production — merging here triggers a Netlify deploy |
 
 ## Netlify setup

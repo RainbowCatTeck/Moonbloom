@@ -1,0 +1,17 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Claude-specific project files — not part of the deployed site
+CLAUDE.md
+DEVELOPMENT_ROUTINE.md
+.claude/
