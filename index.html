@@ -407,7 +407,7 @@ footer{border-top:1px solid var(--b);padding:36px 0}
 </main>
 
 <!-- LEGAL MODAL -->
-<div class="legal-overlay" id="legal-overlay" onclick="if(event.target===this)closeLegal()">
+<div class="legal-overlay" id="legal-overlay" role="dialog" aria-modal="true" onclick="if(event.target===this)closeLegal()">
   <div class="legal-box">
     <button class="legal-close" onclick="closeLegal()">×</button>
     <div class="legal-title">⚖️ legal</div>
@@ -448,7 +448,7 @@ footer{border-top:1px solid var(--b);padding:36px 0}
 </div>
 
 <!-- RESOURCES -->
-<div class="legal-overlay" id="resources-overlay" onclick="if(event.target===this)closeResources()">
+<div class="legal-overlay" id="resources-overlay" role="dialog" aria-modal="true" onclick="if(event.target===this)closeResources()">
   <div class="legal-box">
     <button class="legal-close" onclick="closeResources()">×</button>
     <div class="legal-title">🧭 resources</div>
@@ -611,11 +611,25 @@ document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
   window.addEventListener('scroll',sv,{passive:true});
 })();
 // legal modal
-function openLegal(){document.getElementById('legal-overlay').classList.add('open');}
+function openLegal(){document.getElementById('legal-overlay').classList.add('open');focusModal('legal-overlay');}
 function closeLegal(){document.getElementById('legal-overlay').classList.remove('open');}
 // resources modal
-function openResources(){document.getElementById('resources-overlay').classList.add('open');}
+function openResources(){document.getElementById('resources-overlay').classList.add('open');focusModal('resources-overlay');}
 function closeResources(){document.getElementById('resources-overlay').classList.remove('open');}
+// modal a11y: send focus in on open, escape-to-close, and trap tab within the open modal
+function modalFocusables(box){return[...box.querySelectorAll('a[href],button,input,textarea,select,[tabindex]:not([tabindex="-1"])')].filter(el=>!el.disabled&&el.offsetParent!==null);}
+function focusModal(id){const box=document.querySelector('#'+id+' .legal-box');const f=box&&modalFocusables(box);if(f&&f.length)f[0].focus();}
+document.addEventListener('keydown',e=>{
+  const overlay=document.querySelector('.legal-overlay.open');
+  if(!overlay)return;
+  if(e.key==='Escape'){overlay.classList.remove('open');return;}
+  if(e.key!=='Tab')return;
+  const f=modalFocusables(overlay.querySelector('.legal-box'));
+  if(!f.length)return;
+  const first=f[0],last=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+});
 // contact form
 function submitContact(e){
   e.preventDefault();
